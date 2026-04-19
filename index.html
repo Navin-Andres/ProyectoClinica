@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medic Total</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body>
+
+
+    <header>
+        <div class="header-top">
+
+            <!-- Logo + Nombre -->
+            <div class="header-brand">
+                <img src="/assets/latido-del-corazon.png" alt="Logo">
+                <div>
+                    <h1>Medic Total</h1>
+                    <p>Salud para todos</p>
+                </div>
+            </div>
+
+            <!-- Datos de contacto -->
+            <div class="header-contact">
+                <p>Direccion: Carrera 3 # 10 - 20</p>
+                <p>Telefono: 310 229 7166</p>
+                <p>Email: Medictotal@gamil.com</p>
+            </div>
+
+        </div>
+
+        <nav class="menu-nav">
+            <ul class="menu">
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Sobre mí</a></li>
+                <li><a href="#">Servicios</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <img src="/assets/875.jpg" alt="Clinica Medic Total" class="hero-img">
+            <div class="hero-text">
+                <h2>Medic Total</h2>
+                <p>Salud para todos</p>
+            </div>
+        </section>
+
+        <!-- Pestañas de navegación -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-paciente" onclick="mostrarTab('paciente')">
+                    Registro Paciente
+                </button>
+                <button class="tab-btn" id="tab-medicos" onclick="mostrarTab('medicos')">
+                    Médicos Disponibles
+                </button>
+                <button class="tab-btn" id="tab-cita" onclick="mostrarTab('cita')">
+                    Solicitar Cita
+                </button>
+                <button class="tab-btn" id="tab-citas" onclick="mostrarTab('citas')">
+                    Mis Citas
+                </button>
+            </div>
+
+            <!-- Registro de Paciente -->
+            <section class="tab-content active" id="sec-paciente">
+                <h2 class="section-title">Registro de Paciente</h2>
+                <form class="form" id="formPaciente" onsubmit="registrarPaciente(event)">
+
+                    <div class="form-group">
+                        <label for="pac-id">Número de Identificación</label>
+                        <input type="text" id="pac-id" placeholder="Ej: 1234567890" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pac-nombre">Nombre Completo</label>
+                        <input type="text" id="pac-nombre" placeholder="Ej: Juan Pérez" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pac-edad">Edad</label>
+                        <input type="number" id="pac-edad" min="0" max="120" placeholder="Ej: 35" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Registrarse</button>
+                    <p class="form-msg" id="msg-paciente"></p>
+                </form>
+
+                <!-- Lista de pacientes registrados -->
+                <div class="lista-container">
+                    <h3>Pacientes Registrados</h3>
+                    <div id="lista-pacientes" class="tarjetas-grid"></div>
+                </div>
+            </section>
+
+            <!-- Médicos Disponibles -->
+            <section class="tab-content" id="sec-medicos">
+                <h2 class="section-title">Médicos Disponibles</h2>
+                <div id="lista-medicos" class="tarjetas-grid"></div>
+            </section>
+
+            <!-- Solicitar Cita -->
+            <section class="tab-content" id="sec-cita">
+                <h2 class="section-title">Solicitar Cita Médica</h2>
+                <form class="form" id="formCita" onsubmit="agendarCita(event)">
+
+                    <div class="form-group">
+                        <label for="cita-pac-id">Su Número de Identificación</label>
+                        <input type="text" id="cita-pac-id" placeholder="Ingrese su ID de paciente" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cita-medico">Médico Disponible</label>
+                        <select id="cita-medico" required>
+                            <option value="">-- Seleccione un médico --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cita-fecha">Fecha de la Cita</label>
+                        <input type="date" id="cita-fecha" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cita-motivo">Motivo de la Consulta</label>
+                        <textarea id="cita-motivo" rows="3" placeholder="Describa brevemente su consulta..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary"> Agendar Cita</button>
+                    <p class="form-msg" id="msg-cita"></p>
+                </form>
+            </section>
+
+            <!--  Mis Citas ===== -->
+            <section class="tab-content" id="sec-citas">
+                <h2 class="section-title">Historial de Citas</h2>
+                <div class="form-group" style="max-width:340px; margin: 0 auto 24px;">
+                    <label for="buscar-id">Buscar por ID de Paciente</label>
+                    <input type="text" id="buscar-id" placeholder="Ingrese su ID" oninput="buscarCitas()">
+                </div>
+                <div id="lista-citas" class="tarjetas-grid"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>Direccion: Carrera 3 # 10 - 20</p>
+        <p>Telefono: 310 229 7166</p>
+        <p>Email: Medictotal@gamil.com</p>
+        <p>Todos los derechos reservados &copy; 2024</p>
+    </footer>
+
+    <script src="scipts.js"></script>
+</body>
+
+</html>

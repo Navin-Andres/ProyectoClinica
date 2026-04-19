@@ -1,0 +1,377 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    background-color: #FEFDDF;
+}
+
+
+
+.menu-nav {
+    background-color: #162E93;
+    padding: 10px 0;
+
+}
+
+.menu a,
+.menu a:hover {
+    text-decoration: none;
+    color: #FEFDDF;
+}
+
+
+.menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ===== SISTEMA DE PESTAÑAS ===== */
+.tabs-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px 40px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 3px solid #162E93;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 10px 22px;
+    border: none;
+    background: #e8edf8;
+    color: #162E93;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tab-btn:hover {
+    background: #c5d0f0;
+}
+
+.tab-btn.active {
+    background: #162E93;
+    color: white;
+}
+
+/* Contenido de pestañas: oculto por defecto */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.section-title {
+    color: #162E93;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    border-left: 4px solid #162E93;
+    padding-left: 12px;
+}
+
+/* ===== FORMULARIOS ===== */
+.form {
+    background: white;
+    border: 1px solid #dce3f5;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 480px;
+    margin: 0 auto 32px;
+    box-shadow: 0 4px 16px rgba(22, 46, 147, 0.08);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #162E93;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 14px;
+    border: 2px solid #dce3f5;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #162E93;
+    outline: none;
+}
+
+/* Botón principal */
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #162E93;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background: #0d1f6e;
+    transform: translateY(-1px);
+}
+
+/* Mensajes de éxito/error */
+.form-msg {
+    text-align: center;
+    font-size: 0.9rem;
+    min-height: 20px;
+    margin-top: 4px;
+}
+
+.form-msg.ok {
+    color: #1a7a3c;
+    font-weight: 600;
+}
+
+.form-msg.error {
+    color: #c0392b;
+    font-weight: 600;
+}
+
+/* ===== TARJETAS (grid de médicos/pacientes/citas) ===== */
+.lista-container {
+    margin-top: 32px;
+}
+
+.lista-container h3 {
+    color: #162E93;
+    margin-bottom: 16px;
+}
+
+.tarjetas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.tarjeta {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(22, 46, 147, 0.10);
+    border-top: 4px solid #162E93;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.2s;
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+}
+
+.tarjeta-icon {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.tarjeta h4 {
+    margin: 0;
+    color: #162E93;
+    font-size: 1rem;
+}
+
+.tarjeta p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #444;
+}
+
+.tarjeta-cita {
+    border-top-color: #1a7a3c;
+}
+
+.tarjeta-medico {
+    border-top-color: #162E93;
+}
+
+.tarjeta-paciente {
+    border-top-color: #8a2be2;
+}
+
+/* Badge de especialidad */
+.badge-especialidad {
+    display: inline-block;
+    background: #e8edf8;
+    color: #162E93;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 4px 0;
+}
+
+.vacio {
+    color: #888;
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+
+/* ===== HERO (imagen simple) ===== */
+
+/* El section es relativo para poder poner texto encima */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+    /* recorta lo que sobresalga */
+}
+
+/* La imagen ocupa todo el hero sin deformarse */
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* cubre sin deformar */
+    display: block;
+}
+
+/* El texto va encima de la imagen */
+.hero-text {
+    position: absolute;
+    /* se coloca encima de la imagen */
+    bottom: 40px;
+    left: 40px;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.hero-text h2 {
+    margin: 0 0 8px 0;
+    font-size: 2.5rem;
+}
+
+.hero-text p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Fin del hero */
+
+/* ===== HEADER ===== */
+
+.header-top {
+    display: flex;
+    /* ← ACTIVA el modo horizontal */
+    align-items: center;
+    /* ← centra verticalmente los hijos */
+    justify-content: space-between;
+    /* ← uno a la izquierda, otro a la derecha */
+    padding: 16px 40px;
+    background-color: E5EEE4;
+}
+
+
+.header-brand {
+    display: flex;
+    /* ← imagen y texto en fila */
+    align-items: center;
+    /* ← alineados al centro vertical */
+    gap: 12px;
+    /* ← espacio entre imagen y texto */
+}
+
+.header-brand img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    /* ← imagen circular */
+}
+
+.header-brand h1 {
+    margin: 0;
+    color: #162E93;
+    font-size: 1.6rem;
+}
+
+.header-brand p {
+    margin: 0;
+    color: #162E93;
+    font-size: 0.85rem;
+}
+
+.header-contact {
+    display: column;
+    gap: 4px;
+    text-align: right;
+}
+
+.header-contact p {
+    margin: 0;
+    color: #162E93;
+    font-size: 0.8rem;
+}
+
+/*FORMULARIO*/
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0, 78, 129);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+
+/*fin FORMULARIO*/
+
+/*footer*/
+
+
+footer {
+    text-align: center;
+    margin-top: 32px;
+    padding: 16px 20px;
+    background: #162E93;
+    color: white;
+    font-size: 0.85rem;
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+/*fin footer*/
