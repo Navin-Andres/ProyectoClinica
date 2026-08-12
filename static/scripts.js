@@ -1,4 +1,3 @@
-
 //  DATOS DE MÉDICOS (pre-cargados en el sistema)
 
 const MEDICOS = [
@@ -12,20 +11,20 @@ const MEDICOS = [
 ];
 
 
-//  HELPERS — leer y guardar en localStorage
+async function obtenerPacientes() {
+  const respuesta = await fetch("/pacientes");
+  if (!respuesta.ok) {
+    throw new Error("No se pudieron cargar los pacientes");
+  }
+  return respuesta.json();
+}
 
-function getPacientes() {
-  return JSON.parse(localStorage.getItem("pacientes") || "[]");
-}
-function savePacientes(lista) {
-  localStorage.setItem("pacientes", JSON.stringify(lista));
-}
-
-function getCitas() {
-  return JSON.parse(localStorage.getItem("citas") || "[]");
-}
-function saveCitas(lista) {
-  localStorage.setItem("citas", JSON.stringify(lista));
+async function obtenerCitas() {
+  const respuesta = await fetch("/citas");
+  if (!respuesta.ok) {
+    throw new Error("No se pudieron cargar las citas");
+  }
+  return respuesta.json();
 }
 
 
@@ -49,7 +48,7 @@ function mostrarTab(nombre) {
 
 //  SECCIÓN 1 — Registro de Paciente
 
-function registrarPaciente(event) {
+async function registrarPaciente(event) {
   event.preventDefault();
 
   const id = document.getElementById("pac-id").value.trim();
@@ -57,25 +56,37 @@ function registrarPaciente(event) {
   const edad = document.getElementById("pac-edad").value.trim();
   const msg = document.getElementById("msg-paciente");
 
-  const pacientes = getPacientes();
+  try {
+    const respuesta = await fetch("/pacientes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id, nombre, edad })
+    });
 
-  // Verificar que el ID no esté duplicado
-  if (pacientes.find(p => p.id === id)) {
-    mostrarMensaje(msg, "⚠️ Ya existe un paciente con ese ID.", "error");
-    return;
+    const data = await respuesta.json();
+
+    if (!respuesta.ok) {
+      throw new Error(data.mensaje || "No se pudo registrar el paciente");
+    }
+
+    mostrarMensaje(msg, `Paciente ${nombre} registrado exitosamente.`, "ok");
+    document.getElementById("formPaciente").reset();
+
+    const pacientes = await obtenerPacientes();
+    renderPacientes(pacientes);
+  } catch (error) {
+    mostrarMensaje(msg, error.message, "error");
   }
-
-  pacientes.push({ id, nombre, edad });
-  savePacientes(pacientes);
-
-  mostrarMensaje(msg, `✅ Paciente ${nombre} registrado exitosamente.`, "ok");
-  document.getElementById("formPaciente").reset();
-  renderPacientes();
 }
 
-function renderPacientes() {
+async function renderPacientes(pacientes = null) {
   const contenedor = document.getElementById("lista-pacientes");
-  const pacientes = getPacientes();
+
+  if (!pacientes) {
+    pacientes = await obtenerPacientes();
+  }
 
   if (pacientes.length === 0) {
     contenedor.innerHTML = "<p class='vacio'>No hay pacientes registrados aún.</p>";
@@ -86,7 +97,7 @@ function renderPacientes() {
     <div class="tarjeta tarjeta-paciente">
       <div class="tarjeta-icon">👤</div>
       <h4>${p.nombre}</h4>
-      <p><strong>ID:</strong> ${p.id}</p>
+      <p><strong>ID:</strong> ${p.identificacion ?? p.id}</p>
       <p><strong>Edad:</strong> ${p.edad} años</p>
     </div>
   `).join("");
@@ -126,7 +137,7 @@ function cargarMedicosEnSelect() {
   document.getElementById("cita-fecha").min = hoy;
 }
 
-function agendarCita(event) {
+async function agendarCita(event) {
   event.preventDefault();
 
   const pacId = document.getElementById("cita-pac-id").value.trim();
@@ -135,38 +146,48 @@ function agendarCita(event) {
   const motivo = document.getElementById("cita-motivo").value.trim();
   const msg = document.getElementById("msg-cita");
 
-  // Verificar que el paciente esté registrado
-  const pacientes = getPacientes();
-  const paciente = pacientes.find(p => p.id === pacId);
+  try {
+    // Verificar que el paciente esté registrado
+    const pacientes = await obtenerPacientes();
+    const paciente = pacientes.find(p => String(p.identificacion ?? p.id) === pacId);
 
-  if (!paciente) {
-    mostrarMensaje(msg, "⚠️ ID de paciente no encontrado. Por favor regístrese primero.", "error");
-    return;
+    if (!paciente) {
+      mostrarMensaje(msg, " ID de paciente no encontrado. Por favor regístrese primero.", "error");
+      return;
+    }
+
+    // Obtener datos del médico
+    const medico = MEDICOS.find(m => m.id === medicoId);
+
+    const respuesta = await fetch("/citas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        paciente_id: paciente.identificacion ?? paciente.id,
+        medico_id: medico.id,
+        fecha,
+        motivo
+      })
+    });
+
+    const data = await respuesta.json();
+
+    if (!respuesta.ok) {
+      throw new Error(data.mensaje || "No se pudo agendar la cita");
+    }
+
+    mostrarMensaje(msg, ` Cita agendada con ${medico.nombre} para el ${fecha}.`, "ok");
+    document.getElementById("formCita").reset();
+  } catch (error) {
+    mostrarMensaje(msg, error.message, "error");
   }
-
-  // Obtener datos del médico
-  const medico = MEDICOS.find(m => m.id === medicoId);
-
-  const citas = getCitas();
-  citas.push({
-    id: Date.now(),
-    pacienteId: paciente.id,
-    pacienteNombre: paciente.nombre,
-    medicoId: medico.id,
-    medicoNombre: medico.nombre,
-    especialidad: medico.especialidad,
-    fecha,
-    motivo
-  });
-  saveCitas(citas);
-
-  mostrarMensaje(msg, `✅ Cita agendada con ${medico.nombre} para el ${fecha}.`, "ok");
-  document.getElementById("formCita").reset();
 }
 
 //  SECCIÓN 4 — Mis Citas
 
-function buscarCitas() {
+async function buscarCitas() {
   const id = document.getElementById("buscar-id").value.trim();
   const contenedor = document.getElementById("lista-citas");
 
@@ -175,7 +196,7 @@ function buscarCitas() {
     return;
   }
 
-  const citas = getCitas().filter(c => c.pacienteId === id);
+  const citas = (await obtenerCitas()).filter(c => String(c.paciente_id ?? c.pacienteId) === id);
 
   if (citas.length === 0) {
     contenedor.innerHTML = "<p class='vacio'>No se encontraron citas para ese ID.</p>";
@@ -185,9 +206,9 @@ function buscarCitas() {
   contenedor.innerHTML = citas.map(c => `
     <div class="tarjeta tarjeta-cita">
       <div class="tarjeta-icon">📅</div>
-      <h4>${c.medicoNombre}</h4>
-      <span class="badge-especialidad">${c.especialidad}</span>
-      <p><strong>Paciente:</strong> ${c.pacienteNombre}</p>
+      <h4>${c.medico_nombre ?? c.medicoNombre ?? c.medico_id}</h4>
+      <span class="badge-especialidad">${c.especialidad ?? "Consulta médica"}</span>
+      <p><strong>Paciente:</strong> ${c.paciente_nombre ?? c.pacienteNombre ?? c.paciente_id}</p>
       <p><strong>Fecha:</strong> ${c.fecha}</p>
       <p><strong>Motivo:</strong> ${c.motivo}</p>
     </div>
