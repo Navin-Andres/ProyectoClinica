@@ -19,3 +19,5 @@ services:
         value: medic_total
       - key: MYSQL_SSL
         value: "true"
+      - key: MYSQL_SSL_CA
+        value: ca.pem
