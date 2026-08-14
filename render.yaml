@@ -3,7 +3,8 @@ services:
     name: clinica-web
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /health
     envVars:
       - key: MYSQL_HOST
         sync: false
@@ -15,3 +16,5 @@ services:
         sync: false
       - key: MYSQL_DB
         value: medic_total
+      - key: MYSQL_SSL
+        value: "true"
